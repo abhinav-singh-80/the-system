@@ -29,6 +29,7 @@ export interface Quest {
   xp: number;
   mandatory: boolean;
   description: string;
+  guideImageUrl?: string;
   cues: string[];
   mistakes: string[];
   completed: boolean;

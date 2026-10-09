@@ -34,13 +34,13 @@ First login opens the four-step Awakening calibration. Sessions persist until ex
 
 - Calibration with metric/imperial conversion, experience, self-reported posture/skin concerns, editable routines, and initial nutrition estimates.
 - Sticky cobalt HUD with locally served Inter typography, E–S ranks, XP, daily streak multipliers, and three spendable attribute points per level.
-- Daily quest/habit creation, editing, removal and completion reversal. Guide buttons open exercise-specific animated SVG demonstrations with target muscle heatmaps, controlled tempo, pause controls and form cues. Unknown custom routines use a labeled front/back anatomy fallback.
+- Daily quest/habit creation, editing, removal and completion reversal. Guide buttons open static anatomical diagrams with labeled start/contraction positions, movement paths, orange target muscles and form cues. Expand opens a large lightbox with 100–300% zoom. Custom routines accept an optional HTTP(S) Guide Image URL; missing or unavailable images fall back to built-in diagrams or labeled target anatomy. Image URLs persist in backups; remotely hosted images require network access.
 - Seven completed consecutive days trigger a 20% repetition increase (capped at 100; larger custom targets never decrease). Evolution applies on next-day rollover.
 - Local-midnight/focus rollover, history, and randomized repetition/hold/XP consequences. Penalties never stack while unresolved. Holds count only visible active ticks and require explicit completion. An XP recovery option avoids forced exercise.
-- Planned recovery days preserve the existing streak without awarding a new day or XP. The original training plan resumes the next day.
+- Recovery day is a one-click, two-way toggle. Planned recovery preserves the existing streak without awarding a new day or XP; cancelling restores normal training requirements. The original training plan resumes the next day.
 - Calories, protein, carbohydrates, fats and water; eight vegetarian quick-log staples, custom food presets, and meal editing/deletion.
 - Versioned JSON export/import, size/type/range/account validation, restore preview and confirmation, and a consistency archive.
-- Reduced-motion preferences, keyboard navigation, focus-managed native dialogs and responsive touch controls.
+- CSS-only blue/violet rank aura and staggered entrance transitions respect reduced-motion preferences. Keyboard navigation, nested focus-managed native dialogs and responsive touch controls.
 
 Nutrition values are starting estimates, not prescriptions. Training is adjustable; recovery matters. Posture and grooming routines are habit guidance, not diagnoses or promises to change facial structure. Adolescents receive no calorie-deficit plan.
 
@@ -63,4 +63,4 @@ npx playwright test
 
 The Playwright runner starts or reuses the development server automatically. `TEST_URL` selects a different server; `BROWSER_EXECUTABLE` can point to an existing Chromium installation. This environment's standard browser CDN was blocked, so validation used an npm-distributed Chromium binary outside the repository. Browser artifacts are ignored. Set `TEST_PWA=1` with a production `TEST_URL` to include the offline service-worker scenario.
 
-Validated: 86 unit tests, six Chromium browser scenarios (including animated guides, mobile and offline use), and the production build. iOS installation and physical mobile devices were not tested.
+Validated: 94 unit tests, all seven Chromium browser scenarios, and the production build. Browser coverage includes diagrams, nested zoom, image fallback/persistence, recovery toggling, mobile and offline use. iOS installation and physical mobile devices were not tested.

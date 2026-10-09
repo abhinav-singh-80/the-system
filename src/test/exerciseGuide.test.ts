@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { generateRegimen } from "../data/regimen";
-import { motionPhase, poseFor, resolveDemo } from "../lib/exerciseMotion";
-import type { Motion } from "../lib/exerciseMotion";
+import { guideSteps, poseFor, resolveGuide } from "../lib/exerciseGuide";
+import type { Motion } from "../lib/exerciseGuide";
 import { FOOD_LIBRARY } from "../data/foods";
 const motions: Motion[] = [
   "pushup",
@@ -19,7 +19,7 @@ const motions: Motion[] = [
   "skin",
   "water",
 ];
-describe("exercise guide motion", () => {
+describe("exercise guide diagrams", () => {
   it("resolves every generated routine while leaving unknown custom movements unclaimed", () => {
     for (const experience of [
       "Beginner",
@@ -37,17 +37,20 @@ describe("exercise guide motion", () => {
         target: "Muscle gain",
       });
       for (const quest of quests)
-        expect(resolveDemo(quest), quest.name).not.toBeNull();
+        expect(resolveGuide(quest), quest.name).not.toBeNull();
     }
     expect(
-      resolveDemo({ id: "push-ups", name: "A different custom exercise" }),
+      resolveGuide({ id: "push-ups", name: "A different custom exercise" }),
     ).toBeNull();
   });
-  it("uses three seconds of controlled movement, a one-second hold, and a one-second return", () => {
-    expect(motionPhase(0)).toMatchObject({ stage: 0, t: 0 });
-    expect(motionPhase(3)).toMatchObject({ stage: 1, t: 1 });
-    expect(motionPhase(4)).toMatchObject({ stage: 2, t: 1 });
-    expect(motionPhase(5)).toMatchObject({ stage: 0, t: 0, alternate: true });
+  it("defines distinct labeled start and contraction positions for every guide", () => {
+    for (const motion of motions) {
+      const step = guideSteps[motion];
+      expect(step.start).not.toBe(step.peak);
+      expect(step.startCue.length).toBeGreaterThan(8);
+      expect(step.peakCue.length).toBeGreaterThan(8);
+      expect(step.path.length).toBeGreaterThan(12);
+    }
   });
   it.each(motions)(
     "%s stays finite and within its viewport throughout the motion",
@@ -84,8 +87,13 @@ describe("exercise guide motion", () => {
       expect(poseFor(motion, 0).hands).toEqual(poseFor(motion, 1).hands);
       expect(poseFor(motion, 0).feet).toEqual(poseFor(motion, 1).feet);
     }
-    for (const motion of ["squat", "chair"] as const)
+    for (const motion of ["squat", "chair"] as const) {
       expect(poseFor(motion, 0).feet).toEqual(poseFor(motion, 1).feet);
+      const standing = poseFor(motion, guideSteps[motion].peak);
+      expect(Math.abs(standing.knees[0][0] - standing.feet[0][0])).toBeLessThan(
+        3,
+      );
+    }
   });
 });
 describe("vegetarian quick-log defaults", () => {

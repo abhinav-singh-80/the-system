@@ -25,9 +25,7 @@ export default function Gateway({
       <header className="gateway-header">
         <a className="wordmark" href="/" aria-label="The System home">
           <Crosshair />
-          <span>
-            THE SYSTEM<span className="brand-dot">.</span>
-          </span>
+          <span>THE SYSTEM</span>
         </a>
         <span className="eyebrow hidden sm:block">PERSONAL EVOLUTION OS</span>
       </header>

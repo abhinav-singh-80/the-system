@@ -23,6 +23,22 @@ const food = {
   carbs: number(2000),
   fat: number(1000),
 };
+export const guideImageUrlSchema = z
+  .string()
+  .max(2048)
+  .url()
+  .refine((value) => {
+    try {
+      const url = new URL(value);
+      return (
+        ["https:", "http:"].includes(url.protocol) &&
+        !url.username &&
+        !url.password
+      );
+    } catch {
+      return false;
+    }
+  }, "Use an HTTP or HTTPS image URL without embedded credentials.");
 const quest = z.object({
   id: text,
   name: text,
@@ -34,6 +50,7 @@ const quest = z.object({
   xp: number(500),
   mandatory: z.boolean(),
   description: z.string().max(2000),
+  guideImageUrl: guideImageUrlSchema.optional(),
   cues: z.array(z.string().max(1000)).max(20),
   mistakes: z.array(z.string().max(1000)).max(20),
   completed: z.boolean(),

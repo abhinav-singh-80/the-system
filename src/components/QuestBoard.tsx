@@ -8,7 +8,7 @@ import {
   Flame,
   LockKeyhole,
   Pencil,
-  Play,
+  BookOpen,
   Plus,
   ScanFace,
   Shield,
@@ -17,11 +17,17 @@ import {
   TrendingUp,
 } from "lucide-react";
 import type { Category, ModuleProps, Muscle, Quest } from "../lib/types";
-import { mandatoryComplete, previousDay, toggleQuest } from "../lib/engine";
+import {
+  mandatoryComplete,
+  previousDay,
+  toggleQuest,
+  toggleRecoveryDay,
+} from "../lib/engine";
+import { guideImageUrlSchema } from "../lib/storage";
 import ExerciseModal from "./ExerciseModal";
 import Modal from "./Modal";
 import "./quests.css";
-import "./exercise-demo.css";
+import "./exercise-guide.css";
 
 type Props = ModuleProps & {
   category?: "training" | "recovery";
@@ -52,6 +58,9 @@ function QuestEditor({
   const [unit, setUnit] = useState<Quest["unit"]>(quest?.unit ?? "reps");
   const [mandatory, setMandatory] = useState(quest?.mandatory ?? false);
   const [description, setDescription] = useState(quest?.description ?? "");
+  const [guideImageUrl, setGuideImageUrl] = useState(
+    quest?.guideImageUrl ?? "",
+  );
   const [error, setError] = useState("");
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -65,6 +74,15 @@ function QuestEditor({
       reps > 3600
     ) {
       setError("Enter a name, 1–20 sets, and a target from 1–3,600.");
+      return;
+    }
+    if (
+      guideImageUrl.trim() &&
+      !guideImageUrlSchema.safeParse(guideImageUrl.trim()).success
+    ) {
+      setError(
+        "Enter a valid HTTP or HTTPS image URL (up to 2,048 characters, without credentials).",
+      );
       return;
     }
     onSave({
@@ -83,6 +101,7 @@ function QuestEditor({
           "Rushing to complete the target.",
         ],
       }),
+      guideImageUrl: guideImageUrl.trim() || undefined,
       name: name.trim(),
       category,
       muscle,
@@ -186,6 +205,25 @@ function QuestEditor({
             placeholder="Equipment, form cues, or a reminder"
           />
         </label>
+        <label className="block text-xs text-slate-300">
+          Guide Image URL (optional)
+          <input
+            type="url"
+            maxLength={2048}
+            className="field mt-2 w-full"
+            value={guideImageUrl}
+            onChange={(event) => setGuideImageUrl(event.target.value)}
+            placeholder="https://example.com/movement-guide.png"
+            aria-describedby="guide-image-help"
+          />
+          <span
+            id="guide-image-help"
+            className="block text-xs text-slate-500 mt-2"
+          >
+            Link directly to a form diagram. Leave blank to use the built-in
+            guide or target anatomy.
+          </span>
+        </label>
         <label className="flex items-start gap-3 text-sm text-slate-300">
           <input
             type="checkbox"
@@ -231,7 +269,7 @@ export default function QuestBoard({
   const [deleting, setDeleting] = useState<Quest | null>(null);
   const [undo, setUndo] = useState<Quest | null>(null);
   const [expanded, setExpanded] = useState(false);
-  const [restConfirm, setRestConfirm] = useState(false);
+  const [restNotice, setRestNotice] = useState("");
   const recovery = category === "recovery";
   const quests = state.quests.filter((quest) =>
     recovery ? quest.category !== "training" : quest.category === "training",
@@ -253,6 +291,7 @@ export default function QuestBoard({
         unit,
         mandatory,
         description,
+        guideImageUrl,
       } = quest;
       const details = {
         name,
@@ -263,6 +302,7 @@ export default function QuestBoard({
         unit,
         mandatory,
         description,
+        guideImageUrl,
       };
       return {
         ...current,
@@ -308,8 +348,16 @@ export default function QuestBoard({
           {!recovery && !compact && (
             <button
               className="btn btn-ghost"
-              disabled={locked || state.restDay}
-              onClick={() => setRestConfirm(true)}
+              disabled={locked}
+              aria-pressed={Boolean(state.restDay)}
+              onClick={() => {
+                update(toggleRecoveryDay);
+                setRestNotice(
+                  state.restDay
+                    ? "Recovery cancelled. Today is an active training day again."
+                    : "Recovery day planned. Your current streak will be preserved at midnight.",
+                );
+              }}
             >
               {state.restDay ? "Recovery day planned" : "Recovery day"}
             </button>
@@ -324,6 +372,11 @@ export default function QuestBoard({
           </button>
         </div>
       </div>
+      {restNotice && (
+        <p role="status" className="text-sm text-blue-200 mb-4">
+          {restNotice}
+        </p>
+      )}
       {state.restDay && !recovery && (
         <p className="border border-blue-500/20 bg-blue-500/5 p-4 mb-4 text-xs leading-relaxed text-blue-100">
           Recovery day planned. Training is optional today; your streak is
@@ -431,7 +484,7 @@ export default function QuestBoard({
                 aria-label={`Guide for ${quest.name}`}
                 onClick={() => setSelected(quest)}
               >
-                <Play size={12} />
+                <BookOpen size={12} />
                 Guide
               </button>
               <span className="quest-xp">
@@ -526,37 +579,6 @@ export default function QuestBoard({
             </p>
           )}
         </div>
-      )}
-      {restConfirm && (
-        <Modal
-          title="Plan a recovery day?"
-          onClose={() => setRestConfirm(false)}
-        >
-          <p className="muted text-sm leading-relaxed">
-            Rest supports adaptation. Today’s training becomes optional, and
-            your current streak will be preserved at midnight. No XP is awarded
-            for planning rest. This does not clear an existing penalty.
-          </p>
-          <div className="flex gap-3 justify-end mt-6">
-            <button
-              className="btn btn-ghost"
-              onClick={() => setRestConfirm(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                update((s) =>
-                  s.penalty && !s.penalty.cleared ? s : { ...s, restDay: true },
-                );
-                setRestConfirm(false);
-              }}
-            >
-              Plan recovery day
-            </button>
-          </div>
-        </Modal>
       )}
       {selected && (
         <ExerciseModal quest={selected} onClose={() => setSelected(null)} />

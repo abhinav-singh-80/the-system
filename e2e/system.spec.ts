@@ -83,13 +83,9 @@ test("gateway, calibration, quest CRUD, anatomy, XP, fuel, backups and persisten
     .click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await expect(
-    page.getByRole("img", { name: /Incline push-ups animated/ }),
+    page.getByRole("img", { name: "Start position anatomy" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Pause demonstration" }).click();
-  await expect(page.locator(".exercise-demo")).toHaveAttribute(
-    "data-running",
-    "false",
-  );
+  await expect(page.getByRole("dialog")).toContainText("Range of motion path");
   await page.getByRole("button", { name: "Close dialog" }).click();
   await page
     .getByRole("button", { name: "Complete Incline push-ups", exact: true })
@@ -307,10 +303,15 @@ test("custom meal CRUD, planned recovery and attributes", async ({ page }) => {
   await expect.poll(async () => (await read(page)).meals.length).toBe(0);
   await nav(page, "Daily quests");
   await page.getByRole("button", { name: "Recovery day", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Plan recovery day", exact: true })
-    .click();
+
   await expect.poll(async () => (await read(page)).restDay).toBe(true);
+  await expect(page.getByRole("status")).toContainText("Recovery day planned");
+  await page
+    .getByRole("button", { name: "Recovery day planned", exact: true })
+    .click();
+  await expect.poll(async () => (await read(page)).restDay).toBe(false);
+  await expect(page.getByRole("status")).toContainText("active training day");
+
   await page.evaluate((k) => {
     const state = JSON.parse(localStorage.getItem(k)!);
     state.totalXp = 300;
@@ -352,14 +353,16 @@ test("installed production app loads and logs progress offline", async ({
   await expect.poll(async () => (await read(page)).totalXp).toBe(40);
 });
 
-test("sticky blue HUD and exercise-specific guides on desktop and mobile", async ({
+test("sticky HUD, static diagrams and nested zoom lightbox on desktop and mobile", async ({
   page,
 }) => {
+  test.setTimeout(75000);
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await awaken(page);
-  await expect(page.locator(".anatomy-panel")).toHaveCount(0);
+  await expect(page.locator(".wordmark").first()).toHaveText("THE SYSTEM");
   await expect(page.locator("body")).toHaveCSS("font-family", /Inter/);
+  await expect(page.locator(".monarch-aura")).toHaveCount(1);
   await page.evaluate(() => window.scrollTo(0, 800));
   await expect
     .poll(() =>
@@ -372,26 +375,54 @@ test("sticky blue HUD and exercise-specific guides on desktop and mobile", async
     .getByRole("button", { name: "Guide for Incline push-ups", exact: true })
     .click();
   await expect(page.getByRole("dialog")).toContainText("[ DAILY QUEST ]");
+  await expect(page.getByRole("dialog")).toContainText("Peak contraction");
+  await expect(page.locator(".movement-figure")).toHaveCount(2);
+  await expect(page.locator(".range-arrow")).toHaveCount(1);
   const paths = () =>
-    page.locator(".exercise-motion").evaluate((svg) =>
-      Array.from(svg.querySelectorAll("path"))
-        .map((p) => p.getAttribute("d"))
-        .join("|"),
-    );
+    page
+      .locator(".movement-diagram")
+      .evaluate((svg) =>
+        [...svg.querySelectorAll("path")]
+          .map((p) => p.getAttribute("d"))
+          .join("|"),
+      );
   const start = await paths();
-  await expect.poll(paths).not.toBe(start);
-  await page.getByRole("button", { name: "Pause demonstration" }).click();
-  const stopped = await paths();
   await page.waitForTimeout(180);
-  expect(await paths()).toBe(stopped);
-  await expect(page.getByRole("button", { name: "Close dialog" })).toHaveCSS(
-    "border-top-width",
-    "0px",
-  );
-  await page.screenshot({ path: "test-results/exercise-guide-desktop.png" });
+  expect(await paths()).toBe(start);
+  await page.screenshot({
+    path: "test-results/visual-guide-desktop.png",
+    animations: "disabled",
+  });
+  await page.getByRole("button", { name: "Expand visual guide" }).click();
+  const lightbox = page.getByRole("dialog", {
+    name: "Incline push-ups — visual guide",
+    exact: true,
+  });
+  await expect(lightbox).toBeVisible();
+  await lightbox.getByRole("button", { name: "Zoom in", exact: true }).click();
+  await expect(lightbox.locator("output")).toHaveText("150%");
+  expect(
+    await lightbox
+      .locator(".lightbox-viewport")
+      .evaluate((el) => el.scrollWidth > el.clientWidth),
+  ).toBe(true);
+  await lightbox.getByRole("button", { name: "Reset zoom" }).click();
+  await page.screenshot({
+    path: "test-results/visual-guide-lightbox.png",
+    animations: "disabled",
+  });
+  await page.keyboard.press("Escape");
+  await expect(lightbox).toHaveCount(0);
+  await expect(
+    page.getByRole("dialog", { name: "Incline push-ups", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator("body")).toHaveCSS("overflow", "hidden");
+  await expect(
+    page.getByRole("button", { name: "Expand visual guide" }),
+  ).toBeFocused();
   await page.getByRole("button", { name: "Close dialog" }).click();
+  await expect(page.locator("body")).not.toHaveCSS("overflow", "hidden");
   await nav(page, "Daily quests");
-  await expect(page.locator(".breadcrumb")).toContainText("Daily quests");
   for (const [name, motion] of [
     ["Prone lat pull-downs", "pull"],
     ["Lateral raises", "raise"],
@@ -401,30 +432,38 @@ test("sticky blue HUD and exercise-specific guides on desktop and mobile", async
     await page
       .getByRole("button", { name: `Guide for ${name}`, exact: true })
       .click();
-    await expect(page.locator(".exercise-demo")).toHaveAttribute(
-      "data-motion",
+    await expect(page.locator(".movement-diagram")).toHaveAttribute(
+      "data-movement",
       motion,
     );
     await page.getByRole("button", { name: "Close dialog" }).click();
   }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator(".app-shell")).toHaveCSS("animation-name", "none");
   await page
     .getByRole("button", { name: "Guide for Chair squats", exact: true })
     .click();
-  await expect(page.locator(".exercise-demo")).toHaveAttribute(
-    "data-running",
-    "false",
-  );
-  await expect(
-    page.getByRole("button", { name: "Play demonstration" }),
-  ).toBeVisible();
   expect(
     await page
       .getByRole("dialog")
       .evaluate((el) => el.scrollWidth <= el.clientWidth),
   ).toBe(true);
-  await page.screenshot({ path: "test-results/exercise-guide-mobile.png" });
+  await page.getByRole("button", { name: "Expand visual guide" }).click();
+  const mobile = page.getByRole("dialog", {
+    name: "Chair squats — visual guide",
+    exact: true,
+  });
+  expect(await mobile.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(
+    true,
+  );
+  await page.screenshot({
+    path: "test-results/visual-guide-mobile.png",
+    animations: "disabled",
+  });
+  await mobile.getByRole("button", { name: "Zoom in", exact: true }).click();
+  await expect(mobile.locator("output")).toHaveText("150%");
+  await page.keyboard.press("Escape");
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
   expect(
@@ -433,4 +472,93 @@ test("sticky blue HUD and exercise-specific guides on desktop and mobile", async
     ),
   ).toBe(true);
   expect(errors).toEqual([]);
+});
+
+test("custom guide image CRUD, persistence, zoom and failed-image fallback", async ({
+  page,
+}) => {
+  await awaken(page);
+  await nav(page, "Daily quests");
+  await page.route("https://guide.example/form.svg", (route) =>
+    route.fulfill({
+      contentType: "image/svg+xml",
+      body: '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><rect width="800" height="400" fill="#152b4d"/><text x="50" y="200" fill="white" font-size="32">Custom form diagram</text></svg>',
+    }),
+  );
+  await page.getByRole("button", { name: "Add routine", exact: true }).click();
+  await page.getByLabel("Routine name").fill("Custom shoulder flow");
+  await page
+    .getByLabel("Guide Image URL (optional)")
+    .fill("https://guide.example/form.svg");
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Add routine", exact: true })
+    .click();
+  await expect
+    .poll(
+      async () =>
+        (await read(page)).quests.find(
+          (q: { name: string }) => q.name === "Custom shoulder flow",
+        ).guideImageUrl,
+    )
+    .toBe("https://guide.example/form.svg");
+  await page.reload();
+  await nav(page, "Daily quests");
+  await page
+    .getByRole("button", {
+      name: "Guide for Custom shoulder flow",
+      exact: true,
+    })
+    .click();
+  const img = page.getByRole("img", {
+    name: "Custom shoulder flow custom form guide",
+  });
+  await expect
+    .poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth))
+    .toBe(800);
+  await page.getByRole("button", { name: "Expand visual guide" }).click();
+  await expect(
+    page
+      .getByRole("dialog", {
+        name: "Custom shoulder flow — visual guide",
+        exact: true,
+      })
+      .getByRole("img", { name: "Custom shoulder flow custom form guide" }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("Escape");
+  await page
+    .getByRole("button", { name: "Edit Custom shoulder flow", exact: true })
+    .click();
+  await page
+    .getByLabel("Guide Image URL (optional)")
+    .fill("https://guide.example/missing.png");
+  await page.route("https://guide.example/missing.png", (route) =>
+    route.abort(),
+  );
+  await page.getByRole("button", { name: "Save changes", exact: true }).click();
+  await page
+    .getByRole("button", {
+      name: "Guide for Custom shoulder flow",
+      exact: true,
+    })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText(
+    "Guide image unavailable",
+  );
+  await expect(page.getByRole("dialog")).toContainText("target anatomy only");
+  await page.keyboard.press("Escape");
+  await page
+    .getByRole("button", { name: "Edit Custom shoulder flow", exact: true })
+    .click();
+  await page.getByLabel("Guide Image URL (optional)").fill("");
+  await page.getByRole("button", { name: "Save changes", exact: true }).click();
+  await expect
+    .poll(
+      async () =>
+        (await read(page)).quests.find(
+          (q: { name: string }) => q.name === "Custom shoulder flow",
+        ).guideImageUrl,
+    )
+    .toBeUndefined();
 });

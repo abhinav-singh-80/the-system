@@ -12,6 +12,7 @@ import {
   rankFor,
   rollover,
   toggleQuest,
+  toggleRecoveryDay,
 } from "../lib/engine";
 import type { HunterState, Quest } from "../lib/types";
 
@@ -350,5 +351,21 @@ describe("recovery and custom volume boundaries", () => {
     );
     expect(next.quests[0].reps).toBe(150);
     expect(next.evolution).toHaveLength(0);
+  });
+});
+
+describe("two-way recovery day", () => {
+  it("plans and cancels recovery without changing progress; cancellation restores midnight consequences", () => {
+    const state = hunter({ streak: 4, totalXp: 120 });
+    const rest = toggleRecoveryDay(state);
+    expect(rest).toEqual({ ...state, restDay: true });
+    const active = toggleRecoveryDay(rest);
+    expect(active).toEqual({ ...state, restDay: false });
+    expect(rollover(active, "2026-10-10").penalty).not.toBeNull();
+  });
+  it("cannot change recovery mode while a penalty is unresolved", () => {
+    const state = rollover(hunter(), "2026-10-10");
+    expect(state.penalty).not.toBeNull();
+    expect(toggleRecoveryDay(state)).toBe(state);
   });
 });

@@ -129,9 +129,7 @@ export default function SystemShell({
         <header className="gateway-header">
           <div className="wordmark">
             <Crosshair />
-            <span>
-              THE SYSTEM<span className="brand-dot">.</span>
-            </span>
+            <span>THE SYSTEM</span>
           </div>
           <button className="btn btn-ghost" onClick={onLogout}>
             <LogOut size={14} />
@@ -179,9 +177,7 @@ export default function SystemShell({
         <div className="sidebar-brand">
           <div className="wordmark">
             <Crosshair />
-            <span>
-              THE SYSTEM<span className="brand-dot">.</span>
-            </span>
+            <span>THE SYSTEM</span>
           </div>
           <span className="eyebrow">YOUR EVOLUTION. YOUR RULES.</span>
           <button
@@ -301,7 +297,7 @@ export default function SystemShell({
             </div>
           </div>
         </header>
-        <main id="main-content" className="main-content">
+        <main key={view} id="main-content" className="main-content">
           <div className="page-heading">
             <div>
               <div className="eyebrow mb-2">

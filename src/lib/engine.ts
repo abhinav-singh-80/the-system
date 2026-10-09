@@ -192,3 +192,8 @@ export function rollover(
     updatedAt: Date.now(),
   };
 }
+
+export function toggleRecoveryDay(state: HunterState): HunterState {
+  if (state.penalty && !state.penalty.cleared) return state;
+  return { ...state, restDay: !state.restDay };
+}

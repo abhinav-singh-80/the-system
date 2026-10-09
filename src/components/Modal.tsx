@@ -1,16 +1,20 @@
 import { useEffect, useRef, useId } from "react";
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
+let openModals = 0;
+let previousOverflow = "";
 export default function Modal({
   title,
   children,
   onClose,
   badge = "SYSTEM NOTIFICATION",
+  wide = false,
 }: {
   title: string;
   children: ReactNode;
   onClose: () => void;
   badge?: string;
+  wide?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const id = useId();
@@ -18,11 +22,19 @@ export default function Modal({
   close.current = onClose;
   useEffect(() => {
     const el = ref.current;
+    const returnFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     el?.showModal();
-    document.body.style.overflow = "hidden";
+    if (openModals++ === 0) {
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+    }
     return () => {
       el?.close();
-      document.body.style.overflow = "";
+      if (--openModals === 0) document.body.style.overflow = previousOverflow;
+      if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
     };
   }, []);
   return (
@@ -31,12 +43,13 @@ export default function Modal({
       aria-labelledby={id}
       onCancel={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         close.current();
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) close.current();
       }}
-      className="system-modal"
+      className={`system-modal ${wide ? "guide-lightbox" : ""}`}
     >
       <div className="modal-content">
         <header className="flex items-center justify-between gap-4 border-b border-white/10 pb-5 mb-6">
@@ -54,7 +67,7 @@ export default function Modal({
             onClick={onClose}
             aria-label="Close dialog"
           >
-            <X size={19} />
+            <X size={19} aria-hidden="true" />
           </button>
         </header>
         {children}

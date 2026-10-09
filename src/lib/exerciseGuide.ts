@@ -24,99 +24,84 @@ export interface Pose {
   knees: [Point, Point];
   feet: [Point, Point];
 }
-export interface Demo {
+export interface Guide {
   motion: Motion;
   view: string;
-  phases: [string, string, string];
   placement: string;
 }
-const demos: Record<Motion, Omit<Demo, "motion">> = {
+const demos: Record<Motion, Omit<Guide, "motion">> = {
   pushup: {
     view: "Side view",
-    phases: ["Lower slowly", "Pause", "Press up"],
     placement:
       "Hands just outside shoulder width; keep head, hips and heels in one line.",
   },
   incline: {
     view: "Side view · stable support",
-    phases: ["Lower slowly", "Pause", "Press away"],
     placement:
       "Hands on a stable counter, slightly wider than shoulders; keep a straight body line.",
   },
   squat: {
     view: "Side view",
-    phases: ["Sit back and lower", "Pause", "Stand tall"],
     placement:
       "Feet around shoulder width; heels grounded and knees following the direction of your toes.",
   },
   chair: {
     view: "Side view · chair support",
-    phases: ["Lower toward chair", "Lightly touch", "Stand tall"],
     placement:
       "Use a sturdy chair. Reach hips back, keep feet grounded, and stand without bouncing.",
   },
   raise: {
     view: "Front view",
-    phases: ["Lower slowly", "Pause", "Raise to shoulder height"],
     placement:
       "Soft elbows, palms toward the floor; lift slightly forward of your torso without shrugging.",
   },
   pull: {
     view: "Face-down · overhead view",
-    phases: ["Reach arms long", "Pause", "Draw elbows to ribs"],
     placement:
       "Lie face-down, gaze at the floor; draw elbows toward your waist without lifting the chest high.",
   },
   deadbug: {
     view: "Side view · alternating limbs",
-    phases: ["Extend opposite limbs", "Hold your brace", "Return to start"],
     placement:
       "Lie on your back with knees above hips; extend one leg and the opposite arm only as far as your back stays comfortable.",
   },
   pelvic: {
     view: "Side view · small range",
-    phases: ["Tilt gently", "Pause", "Release"],
     placement:
       "Lie with knees bent and feet grounded; exhale into a small pelvic tilt without lifting into a bridge.",
   },
   chin: {
     view: "Side view · small range",
-    phases: ["Slide head back", "Pause", "Release"],
     placement:
       "Keep your gaze level. Glide your head straight back a small distance, without tipping the chin down.",
   },
   angel: {
     view: "Front view · back to wall",
-    phases: ["Slide arms down", "Pause", "Reach overhead"],
     placement:
       "Stand comfortably against a wall; keep ribs relaxed and move arms within a painless range.",
   },
   cleanse: {
     view: "Gentle care · illustrative",
-    phases: ["Light circular strokes", "Pause", "Release"],
     placement:
       "Use clean hands, gentle cleanser and comfortable water; use light pressure on intact skin.",
   },
   massage: {
     view: "Gentle care · illustrative",
-    phases: ["Glide gently outward", "Pause", "Release"],
     placement:
       "Use feather-light strokes along the cheeks and jaw. Avoid deep pressure on the neck or inflamed skin.",
   },
   skin: {
     view: "Gentle care · illustrative",
-    phases: ["Spread gently", "Pause", "Release"],
     placement:
       "Apply moisturizer and sunscreen as directed on the label; avoid rubbing around the eyes.",
   },
   water: {
     view: "Hydration habit · illustrative",
-    phases: ["Raise glass", "Sip comfortably", "Lower glass"],
     placement:
       "Drink according to thirst and log your water in Fuel; follow any prescribed fluid restriction.",
   },
 };
-export function resolveDemo(quest: Pick<Quest, "id" | "name">): Demo | null {
+export function resolveGuide(quest: Pick<Quest, "id" | "name">): Guide | null {
   const name = quest.name.trim().toLowerCase();
   const rules: [RegExp, Motion][] = [
     [/^incline push[ -]?ups?$/, "incline"],
@@ -152,17 +137,6 @@ function joint(a: Point, b: Point, length: number, side = 1): Point {
     (a[0] + b[0]) / 2 - (dy / distance) * height * side,
     (a[1] + b[1]) / 2 + (dx / distance) * height * side,
   ];
-}
-export function motionPhase(seconds: number) {
-  const cycle = ((seconds % 5) + 5) % 5;
-  const stage = cycle < 3 ? 0 : cycle < 4 ? 1 : 2;
-  const raw = stage === 0 ? cycle / 3 : stage === 1 ? 1 : 1 - (cycle - 4);
-  return {
-    stage,
-    t: (1 - Math.cos(raw * Math.PI)) / 2,
-    progress: cycle / 5,
-    alternate: Math.floor(seconds / 5) % 2 === 1,
-  };
 }
 export function poseFor(motion: Motion, t: number, alternate = false): Pose {
   const pose: Pose = {
@@ -215,8 +189,8 @@ export function poseFor(motion: Motion, t: number, alternate = false): Pose {
     return pose;
   }
   if (motion === "squat" || motion === "chair") {
-    const hip = lerp([223, 163], [260, 216], t),
-      shoulder = lerp([215, 85], [202, 149], t);
+    const hip = lerp([218, 154], [260, 216], t),
+      shoulder = lerp([213, 76], [202, 149], t);
     pose.head = [shoulder[0] - 9, shoulder[1] - 29];
     pose.shoulders = [shoulder, [shoulder[0] + 6, shoulder[1] + 2]];
     pose.hips = [hip, [hip[0] + 6, hip[1] + 2]];
@@ -254,8 +228,8 @@ export function poseFor(motion: Motion, t: number, alternate = false): Pose {
         [214 - t * 3, 215 - t * 4],
       ];
       pose.feet = [
-        [281, 235],
-        [286, 231],
+        [281, 226],
+        [286, 222],
       ];
       pose.knees = [
         [258, 188],
@@ -376,3 +350,113 @@ export function poseFor(motion: Motion, t: number, alternate = false): Pose {
   }
   return pose;
 }
+
+export const guideSteps: Record<
+  Motion,
+  {
+    start: number;
+    peak: number;
+    startCue: string;
+    peakCue: string;
+    path: string;
+  }
+> = {
+  pushup: {
+    start: 1,
+    peak: 0,
+    startCue: "Chest lowered · elbows about 45°",
+    peakCue: "Press away · keep your body aligned",
+    path: "Press through your palms, then lower with control.",
+  },
+  incline: {
+    start: 1,
+    peak: 0,
+    startCue: "Chest toward a stable support",
+    peakCue: "Press away without shrugging",
+    path: "Move your whole body as one line toward and away from the support.",
+  },
+  squat: {
+    start: 1,
+    peak: 0,
+    startCue: "Hips back · heels grounded",
+    peakCue: "Stand tall · no backward lean",
+    path: "Drive through the whole foot. Return by sitting your hips back.",
+  },
+  chair: {
+    start: 1,
+    peak: 0,
+    startCue: "Light chair contact · feet planted",
+    peakCue: "Stand tall without bouncing",
+    path: "Rise from the chair, then lower slowly until your hips lightly touch.",
+  },
+  raise: {
+    start: 1,
+    peak: 0,
+    startCue: "Arms beside you · elbows soft",
+    peakCue: "Hands at shoulder height",
+    path: "Sweep arms out and slightly forward. Keep shoulders away from ears.",
+  },
+  pull: {
+    start: 1,
+    peak: 0,
+    startCue: "Face down · arms reaching long",
+    peakCue: "Draw elbows toward your ribs",
+    path: "Pull elbows down in an arc, then reach forward without arching your back.",
+  },
+  deadbug: {
+    start: 0,
+    peak: 1,
+    startCue: "Knees above hips · ribs relaxed",
+    peakCue: "Opposite arm and leg extended",
+    path: "Reach opposite limbs away. Return to start and switch sides.",
+  },
+  pelvic: {
+    start: 0,
+    peak: 1,
+    startCue: "Knees bent · feet grounded",
+    peakCue: "Exhale · gently tilt the pelvis",
+    path: "Use a small pelvic rotation; keep your hips on the floor.",
+  },
+  chin: {
+    start: 0,
+    peak: 1,
+    startCue: "Gaze level · shoulders relaxed",
+    peakCue: "Slide head straight back gently",
+    path: "Glide horizontally over your shoulders; avoid tipping your chin down.",
+  },
+  angel: {
+    start: 1,
+    peak: 0,
+    startCue: "Back toward wall · elbows bent",
+    peakCue: "Reach overhead within comfort",
+    path: "Slide arms upward in an arc, keeping ribs relaxed, then return.",
+  },
+  cleanse: {
+    start: 0,
+    peak: 1,
+    startCue: "Clean hands · gentle cleanser",
+    peakCue: "Light strokes · rinse comfortably",
+    path: "Use small, gentle circles. Avoid scrubbing or pulling the skin.",
+  },
+  massage: {
+    start: 0,
+    peak: 1,
+    startCue: "Feather-light cheek contact",
+    peakCue: "Glide gently outward",
+    path: "Follow cheeks toward the jaw with light pressure; avoid the neck.",
+  },
+  skin: {
+    start: 0,
+    peak: 1,
+    startCue: "Apply moisturizer or sunscreen",
+    peakCue: "Spread a gentle, even layer",
+    path: "Spread without pulling skin. Follow the product's directions.",
+  },
+  water: {
+    start: 0,
+    peak: 1,
+    startCue: "Comfortable glass of water",
+    peakCue: "Sip according to thirst",
+    path: "Raise the glass, sip comfortably and log water in Fuel.",
+  },
+};

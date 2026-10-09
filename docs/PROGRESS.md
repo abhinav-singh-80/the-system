@@ -23,3 +23,11 @@ Browser check: `TEST_URL=http://127.0.0.1:4173 TEST_PWA=1 BROWSER_EXECUTABLE=/tm
 - Replaced the food library with the eight requested vegetarian defaults; custom food and existing logs remain supported.
 - Fixed mobile dialog overflow caused by decorative corner brackets extending outside the content box.
 - Validation: production TypeScript/Vite build, 86 unit tests and six browser integration scenarios, including sticky positioning, moving/paused poses, desktop/mobile guide layout, keyboard dismissal and reduced motion.
+
+## Final master polish
+
+- Replaced the animated mannequin with static anatomical position plates, movement arrows, muscle highlights and an expandable 100–300% zoom lightbox. Nested dialogs restore focus and preserve scroll locking.
+- Added optional custom Guide Image URLs to routine creation/editing, validation, scoped persistence and JSON backup restore. Unavailable images fall back to built-in diagrams or labeled target anatomy.
+- Removed brand punctuation; added CSS-only blue/violet aura and staggered initial/route entrances with reduced-motion support.
+- Recovery day now toggles on/off immediately with a status notice; cancelling restores normal midnight requirements without changing earned progress.
+- Verified the production TypeScript/Vite build, 94 unit tests and all seven browser scenarios. Desktop/mobile lightbox checks cover static poses, zoom overflow, focus return, nested Escape dismissal, reduced motion and custom-image persistence/fallback. Physical devices remain untested.

@@ -270,3 +270,33 @@ describe("optional cloud adapter boundary", () => {
     expect(save).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("optional custom guide images", () => {
+  it("preserves the URL through local persistence and backup restore, while accepting old routines", () => {
+    const state = { ...initialState("abhinav"), quests: [quest()] };
+    expect(
+      parseState(state, "abhinav").quests[0].guideImageUrl,
+    ).toBeUndefined();
+    state.quests[0].guideImageUrl = "https://example.com/form.png?version=2";
+    saveState(state);
+    expect(loadState("abhinav").quests[0].guideImageUrl).toBe(
+      state.quests[0].guideImageUrl,
+    );
+    expect(
+      importBackup(exportBackup(state), "abhinav").quests[0].guideImageUrl,
+    ).toBe(state.quests[0].guideImageUrl);
+  });
+  it.each([
+    "javascript:alert(1)",
+    "data:image/svg+xml,test",
+    "file:///etc/passwd",
+    "not a URL",
+    "https://user:password@example.com/guide.png",
+  ])("rejects an unsafe or malformed guide URL: %s", (guideImageUrl) => {
+    const state = {
+      ...initialState("abhinav"),
+      quests: [{ ...quest(), guideImageUrl }],
+    };
+    expect(() => parseState(state, "abhinav")).toThrow();
+  });
+});

@@ -19,6 +19,7 @@ export default function HunterStatus({ state, update }: ModuleProps) {
   ];
   return (
     <section className="panel beam hunter-status">
+      <div className="monarch-aura" aria-hidden="true" />
       <header className="flex justify-between items-center mb-6">
         <span className="eyebrow">HUNTER STATUS</span>
         <span className="flex items-center gap-2 text-[11px] text-primary">

@@ -258,9 +258,6 @@ body:before {
   width: 30px;
   height: 30px;
 }
-.brand-dot {
-  color: var(--accent);
-}
 @keyframes beam {
   0% {
     background-position: 100% 0;
@@ -1586,6 +1583,102 @@ textarea:focus-visible,
 }
 @media (prefers-reduced-motion: reduce) {
   .system-modal[open] {
+    animation: none;
+  }
+}
+/* Static gradients animate only transform/opacity; no per-frame JavaScript. */
+.hunter-status {
+  isolation: isolate;
+}
+.hunter-status > .monarch-aura {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: inherit;
+}
+.monarch-aura:before,
+.rank-emblem:before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.18) 0%,
+    rgba(88, 28, 135, 0.08) 50%,
+    transparent 70%
+  );
+  animation: monarch-drift 12s ease-in-out infinite alternate;
+}
+.monarch-aura:before {
+  inset: -20%;
+}
+.rank-emblem {
+  isolation: isolate;
+}
+.rank-emblem:before {
+  inset: -45%;
+  z-index: -1;
+  animation-duration: 9s;
+}
+@keyframes monarch-drift {
+  from {
+    transform: translate(-3%, 4%) scale(0.96);
+    opacity: 0.55;
+  }
+  to {
+    transform: translate(4%, -4%) scale(1.08);
+    opacity: 1;
+  }
+}
+.app-shell {
+  animation: hud-initialize 0.4s ease-out both;
+}
+.topbar {
+  animation: hud-arrive 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.04s backwards;
+}
+.main-content > .page-heading {
+  animation: hud-arrive 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.08s backwards;
+}
+.main-content .mission-banner,
+.main-content .metric-grid,
+.main-content .panel {
+  animation: hud-arrive 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.14s backwards;
+}
+.main-content .metric-grid {
+  animation-delay: 0.2s;
+}
+.main-content .hunter-status {
+  animation-delay: 0.26s;
+}
+@keyframes hud-initialize {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes hud-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell,
+  .topbar,
+  .main-content > .page-heading,
+  .main-content .mission-banner,
+  .main-content .metric-grid,
+  .main-content .panel,
+  .monarch-aura:before,
+  .rank-emblem:before {
     animation: none;
   }
 }
