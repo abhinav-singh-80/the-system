@@ -77,15 +77,19 @@ test("gateway, calibration, quest CRUD, anatomy, XP, fuel, backups and persisten
   await nav(page, "Daily quests");
   await page
     .getByRole("button", {
-      name: "View Incline push-ups form guide",
+      name: "Guide for Incline push-ups",
       exact: true,
     })
     .click();
   await expect(page.getByRole("dialog")).toBeVisible();
-  await page.getByRole("button", { name: "Show back", exact: true }).click();
   await expect(
-    page.getByRole("img", { name: /Back anatomical/ }),
+    page.getByRole("img", { name: /Incline push-ups animated/ }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Pause demonstration" }).click();
+  await expect(page.locator(".exercise-demo")).toHaveAttribute(
+    "data-running",
+    "false",
+  );
   await page.getByRole("button", { name: "Close dialog" }).click();
   await page
     .getByRole("button", { name: "Complete Incline push-ups", exact: true })
@@ -134,7 +138,7 @@ test("gateway, calibration, quest CRUD, anatomy, XP, fuel, backups and persisten
     page.getByRole("button", { name: "View Test mobility form guide" }),
   ).toHaveCount(0);
   await nav(page, "Fuel & nutrition");
-  await page.getByRole("button", { name: /Log Eggs/i }).click();
+  await page.getByRole("button", { name: /Log Soya Chunks/i }).click();
   await expect.poll(async () => (await read(page)).meals.length).toBe(1);
   await page.getByRole("button", { name: "250 ml", exact: true }).click();
   await expect.poll(async () => (await read(page)).water).toBe(250);
@@ -346,4 +350,87 @@ test("installed production app loads and logs progress offline", async ({
     .getByRole("button", { name: "Complete Incline push-ups", exact: true })
     .click();
   await expect.poll(async () => (await read(page)).totalXp).toBe(40);
+});
+
+test("sticky blue HUD and exercise-specific guides on desktop and mobile", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await awaken(page);
+  await expect(page.locator(".anatomy-panel")).toHaveCount(0);
+  await expect(page.locator("body")).toHaveCSS("font-family", /Inter/);
+  await page.evaluate(() => window.scrollTo(0, 800));
+  await expect
+    .poll(() =>
+      page
+        .locator(".topbar")
+        .evaluate((el) => Math.round(el.getBoundingClientRect().top)),
+    )
+    .toBe(0);
+  await page
+    .getByRole("button", { name: "Guide for Incline push-ups", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toContainText("[ DAILY QUEST ]");
+  const paths = () =>
+    page.locator(".exercise-motion").evaluate((svg) =>
+      Array.from(svg.querySelectorAll("path"))
+        .map((p) => p.getAttribute("d"))
+        .join("|"),
+    );
+  const start = await paths();
+  await expect.poll(paths).not.toBe(start);
+  await page.getByRole("button", { name: "Pause demonstration" }).click();
+  const stopped = await paths();
+  await page.waitForTimeout(180);
+  expect(await paths()).toBe(stopped);
+  await expect(page.getByRole("button", { name: "Close dialog" })).toHaveCSS(
+    "border-top-width",
+    "0px",
+  );
+  await page.screenshot({ path: "test-results/exercise-guide-desktop.png" });
+  await page.getByRole("button", { name: "Close dialog" }).click();
+  await nav(page, "Daily quests");
+  await expect(page.locator(".breadcrumb")).toContainText("Daily quests");
+  for (const [name, motion] of [
+    ["Prone lat pull-downs", "pull"],
+    ["Lateral raises", "raise"],
+    ["Dead bugs", "deadbug"],
+    ["Chair squats", "chair"],
+  ]) {
+    await page
+      .getByRole("button", { name: `Guide for ${name}`, exact: true })
+      .click();
+    await expect(page.locator(".exercise-demo")).toHaveAttribute(
+      "data-motion",
+      motion,
+    );
+    await page.getByRole("button", { name: "Close dialog" }).click();
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page
+    .getByRole("button", { name: "Guide for Chair squats", exact: true })
+    .click();
+  await expect(page.locator(".exercise-demo")).toHaveAttribute(
+    "data-running",
+    "false",
+  );
+  await expect(
+    page.getByRole("button", { name: "Play demonstration" }),
+  ).toBeVisible();
+  expect(
+    await page
+      .getByRole("dialog")
+      .evaluate((el) => el.scrollWidth <= el.clientWidth),
+  ).toBe(true);
+  await page.screenshot({ path: "test-results/exercise-guide-mobile.png" });
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect(errors).toEqual([]);
 });

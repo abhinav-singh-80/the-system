@@ -183,7 +183,7 @@ export default function Awakening({
     <main className="awakening min-h-screen px-4 py-6 sm:px-8 sm:py-10">
       <header className="mx-auto mb-10 flex max-w-6xl items-center justify-between border-b border-white/10 pb-5">
         <div className="flex items-center gap-3">
-          <Crosshair className="text-cyan-300" size={29} />
+          <Crosshair className="text-blue-300" size={29} />
           <span className="font-display text-2xl font-bold tracking-[.18em]">
             THE SYSTEM
           </span>
@@ -196,7 +196,7 @@ export default function Awakening({
           <h1 className="font-display text-5xl leading-none font-semibold uppercase sm:text-6xl">
             The
             <br />
-            <span className="text-cyan-300">Awakening.</span>
+            <span className="text-blue-300">Awakening.</span>
           </h1>
           <p className="muted mt-5 max-w-xs text-sm leading-6">
             Build your starting plan. Every rep, meal and small habit starts
@@ -210,7 +210,7 @@ export default function Awakening({
               <li
                 key={label}
                 aria-current={index === step ? "step" : undefined}
-                className={`flex gap-3 border p-3 text-xs lg:items-center ${index === step ? "border-cyan-400/50 bg-cyan-400/5 text-cyan-200" : index < step ? "border-white/10 text-white/80" : "border-white/5 text-white/40"}`}
+                className={`flex gap-3 border p-3 text-xs lg:items-center ${index === step ? "border-blue-400/50 bg-blue-400/5 text-blue-200" : index < step ? "border-white/10 text-white/80" : "border-white/5 text-white/40"}`}
               >
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center font-mono">
                   {index < step ? <Check size={16} /> : `0${index + 1}`}
@@ -220,7 +220,7 @@ export default function Awakening({
             ))}
           </ol>
           <div className="mt-8 hidden items-start gap-3 border-t border-white/10 pt-5 lg:flex">
-            <Shield size={18} className="shrink-0 text-cyan-300" />
+            <Shield size={18} className="shrink-0 text-blue-300" />
             <p className="muted text-xs leading-5">
               Your plan stays in this browser, scoped to your hunter account.
               You can export it from System archive.
@@ -231,7 +231,7 @@ export default function Awakening({
           <div className="border-b border-white/10 p-5 sm:p-8">
             <div className="mb-4 flex items-center justify-between">
               <span className="eyebrow">Calibration {step + 1} / 4</span>
-              <ScanLine className="text-cyan-300" size={22} />
+              <ScanLine className="text-blue-300" size={22} />
             </div>
             <h2
               ref={heading}
@@ -356,8 +356,8 @@ export default function Awakening({
                     </select>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 border border-cyan-400/20 bg-cyan-400/5 p-4 sm:col-span-2">
-                  <Info size={18} className="mt-0.5 shrink-0 text-cyan-300" />
+                <div className="flex items-start gap-3 border border-blue-400/20 bg-blue-400/5 p-4 sm:col-span-2">
+                  <Info size={18} className="mt-0.5 shrink-0 text-blue-300" />
                   <p className="muted text-xs leading-6">
                     {Number(age) < 18
                       ? "For ages 16–17, nutrition estimates support maintenance, never a calorie deficit. Growth needs vary; review your targets with a qualified clinician or dietitian."
@@ -377,12 +377,12 @@ export default function Awakening({
                         type="button"
                         aria-pressed={physique === choice.name}
                         onClick={() => setPhysique(choice.name)}
-                        className={`min-h-20 border p-4 text-left transition-colors ${physique === choice.name ? "border-cyan-400/60 bg-cyan-400/10" : "border-white/10 hover:border-white/30"}`}
+                        className={`min-h-20 border p-4 text-left transition-colors ${physique === choice.name ? "border-blue-400/60 bg-blue-400/10" : "border-white/10 hover:border-white/30"}`}
                       >
                         <span className="flex items-center justify-between text-sm">
                           {choice.name}
                           {physique === choice.name && (
-                            <Check size={16} className="text-cyan-300" />
+                            <Check size={16} className="text-blue-300" />
                           )}
                         </span>
                         <span className="muted mt-2 block text-xs leading-5">
@@ -402,12 +402,12 @@ export default function Awakening({
                           type="button"
                           aria-pressed={experience === name}
                           onClick={() => setExperience(name)}
-                          className={`border p-4 text-left transition-colors ${experience === name ? "border-cyan-400/60 bg-cyan-400/10" : "border-white/10 hover:border-white/30"}`}
+                          className={`border p-4 text-left transition-colors ${experience === name ? "border-blue-400/60 bg-blue-400/10" : "border-white/10 hover:border-white/30"}`}
                         >
                           <Dumbbell
                             size={18}
                             className={
-                              experience === name ? "text-cyan-300" : "muted"
+                              experience === name ? "text-blue-300" : "muted"
                             }
                           />
                           <span className="mt-3 block text-sm">{name}</span>
@@ -425,8 +425,8 @@ export default function Awakening({
                     )}
                   </div>
                 </fieldset>
-                <div className="flex gap-4 border-l-2 border-cyan-400 bg-cyan-400/5 p-5">
-                  <Crosshair className="shrink-0 text-cyan-300" size={24} />
+                <div className="flex gap-4 border-l-2 border-blue-400 bg-blue-400/5 p-5">
+                  <Crosshair className="shrink-0 text-blue-300" size={24} />
                   <div>
                     <p className="text-sm">Aesthetic lean muscle gain</p>
                     <p className="muted mt-2 text-xs leading-6">
@@ -455,12 +455,12 @@ export default function Awakening({
                               : [...list, item.name],
                           )
                         }
-                        className={`min-h-32 border p-5 text-left transition-colors ${selected ? "border-cyan-400/60 bg-cyan-400/10" : "border-white/10 hover:border-white/30"}`}
+                        className={`min-h-32 border p-5 text-left transition-colors ${selected ? "border-blue-400/60 bg-blue-400/10" : "border-white/10 hover:border-white/30"}`}
                       >
                         <span className="mb-4 flex items-center justify-between">
-                          <Fingerprint size={21} className="text-cyan-300" />
+                          <Fingerprint size={21} className="text-blue-300" />
                           <span
-                            className={`flex h-5 w-5 items-center justify-center border ${selected ? "border-cyan-300 bg-cyan-300 text-black" : "border-white/30"}`}
+                            className={`flex h-5 w-5 items-center justify-center border ${selected ? "border-blue-300 bg-blue-300 text-black" : "border-white/30"}`}
                           >
                             {selected && <Check size={14} />}
                           </span>
@@ -483,7 +483,7 @@ export default function Awakening({
             )}
             {step === 3 && (
               <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-px overflow-hidden border border-cyan-400/20 bg-white/10 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-px overflow-hidden border border-blue-400/20 bg-white/10 sm:grid-cols-4">
                   {targets &&
                     [
                       { value: targets.calories, label: "kcal / day" },
@@ -492,7 +492,7 @@ export default function Awakening({
                       { value: targets.fat, label: "fat / g" },
                     ].map((item) => (
                       <div key={item.label} className="bg-[#090f19] p-4">
-                        <p className="font-display text-3xl font-semibold text-cyan-200">
+                        <p className="font-display text-3xl font-semibold text-blue-200">
                           {item.value.toLocaleString()}
                         </p>
                         <p className="muted mt-1 text-xs">{item.label}</p>
@@ -528,7 +528,7 @@ export default function Awakening({
                     <article key={q.id} className="border border-white/10 p-4">
                       <div className="mb-3 flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <span className="eyebrow mb-2 block text-[10px]">
+                          <span className="eyebrow mb-2 block text-xs">
                             {q.category} · {q.muscle}
                           </span>
                           <input
@@ -597,7 +597,7 @@ export default function Awakening({
                         </label>
                         <label className="flex min-h-11 items-center gap-2 text-xs muted">
                           <input
-                            className="accent-cyan-300"
+                            className="accent-blue-300"
                             type="checkbox"
                             checked={q.mandatory}
                             onChange={(e) =>
@@ -611,7 +611,7 @@ export default function Awakening({
                   ))}
                 </div>
                 <div className="flex items-start gap-3 border border-white/10 p-4">
-                  <Info size={17} className="mt-0.5 shrink-0 text-cyan-300" />
+                  <Info size={17} className="mt-0.5 shrink-0 text-blue-300" />
                   <p className="muted text-xs leading-5">
                     Required quests affect your daily streak. Missing them at
                     midnight opens the Penalty Zone; a non-exercise option is

@@ -21,7 +21,7 @@ export default function HunterStatus({ state, update }: ModuleProps) {
     <section className="panel beam hunter-status">
       <header className="flex justify-between items-center mb-6">
         <span className="eyebrow">HUNTER STATUS</span>
-        <span className="flex items-center gap-2 text-[9px] text-primary">
+        <span className="flex items-center gap-2 text-[11px] text-primary">
           <span className="status-dot" /> ACTIVE
         </span>
       </header>
@@ -47,7 +47,7 @@ export default function HunterStatus({ state, update }: ModuleProps) {
             {String(level).padStart(2, "0")}
           </span>
         </div>
-        <div className="text-[10px]">
+        <div className="text-xs">
           <span className="text-primary">{state.totalXp % 300}</span>
           <span className="text-slate-500"> / 300 XP</span>
         </div>
@@ -63,10 +63,10 @@ export default function HunterStatus({ state, update }: ModuleProps) {
         <div style={{ width: `${(state.totalXp % 300) / 3}%` }} />
       </div>
       <div className="flex justify-between mt-2">
-        <span className="text-[9px] muted">
+        <span className="text-[11px] muted">
           {300 - (state.totalXp % 300)} XP to level {level + 1}
         </span>
-        <span className="text-[9px] text-primary">
+        <span className="text-[11px] text-primary">
           {multiplier(state).toFixed(1)}× MULTIPLIER
         </span>
       </div>

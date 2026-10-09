@@ -33,12 +33,12 @@ First login opens the four-step Awakening calibration. Sessions persist until ex
 ## Included workflows
 
 - Calibration with metric/imperial conversion, experience, self-reported posture/skin concerns, editable routines, and initial nutrition estimates.
-- Hunter dashboard with E–S ranks, XP, daily streak multipliers, and three spendable attribute points per level.
-- Daily quest/habit creation, editing, removal and completion reversal; front/back SVG muscle guide, movement pacing and form cues.
+- Sticky cobalt HUD with locally served Inter typography, E–S ranks, XP, daily streak multipliers, and three spendable attribute points per level.
+- Daily quest/habit creation, editing, removal and completion reversal. Guide buttons open exercise-specific animated SVG demonstrations with target muscle heatmaps, controlled tempo, pause controls and form cues. Unknown custom routines use a labeled front/back anatomy fallback.
 - Seven completed consecutive days trigger a 20% repetition increase (capped at 100; larger custom targets never decrease). Evolution applies on next-day rollover.
 - Local-midnight/focus rollover, history, and randomized repetition/hold/XP consequences. Penalties never stack while unresolved. Holds count only visible active ticks and require explicit completion. An XP recovery option avoids forced exercise.
 - Planned recovery days preserve the existing streak without awarding a new day or XP. The original training plan resumes the next day.
-- Calories, protein, carbohydrates, fats and water; quick-log food presets, custom food presets, and meal editing/deletion.
+- Calories, protein, carbohydrates, fats and water; eight vegetarian quick-log staples, custom food presets, and meal editing/deletion.
 - Versioned JSON export/import, size/type/range/account validation, restore preview and confirmation, and a consistency archive.
 - Reduced-motion preferences, keyboard navigation, focus-managed native dialogs and responsive touch controls.
 
@@ -63,4 +63,4 @@ npx playwright test
 
 The Playwright runner starts or reuses the development server automatically. `TEST_URL` selects a different server; `BROWSER_EXECUTABLE` can point to an existing Chromium installation. This environment's standard browser CDN was blocked, so validation used an npm-distributed Chromium binary outside the repository. Browser artifacts are ignored. Set `TEST_PWA=1` with a production `TEST_URL` to include the offline service-worker scenario.
 
-Validated: 68 unit tests, five Chromium browser scenarios (including mobile and offline use), and the production build. iOS installation and physical mobile devices were not tested.
+Validated: 86 unit tests, six Chromium browser scenarios (including animated guides, mobile and offline use), and the production build. iOS installation and physical mobile devices were not tested.

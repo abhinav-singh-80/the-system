@@ -43,7 +43,7 @@
   align-items: center;
   gap: 9px;
   color: var(--penalty-text);
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.11em;
@@ -135,7 +135,7 @@
 }
 .penalty-amount > span {
   color: #bc8c97;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-sans);
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.05em;

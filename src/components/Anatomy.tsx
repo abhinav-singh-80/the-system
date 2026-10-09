@@ -99,7 +99,7 @@ export default function Anatomy({
         cy="549"
         rx="67"
         ry="10"
-        fill="#00e5ff"
+        fill="#3b82f6"
         opacity=".045"
       />
       <g

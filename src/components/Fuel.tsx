@@ -29,7 +29,7 @@ const NUTRIENTS: {
   unit: string;
   color: string;
 }[] = [
-  { key: "protein", label: "Protein", unit: "g", color: "#00e5ff" },
+  { key: "protein", label: "Protein", unit: "g", color: "#3b82f6" },
   { key: "carbs", label: "Carbs", unit: "g", color: "#7789ff" },
   { key: "fat", label: "Healthy fats", unit: "g", color: "#e8b86d" },
 ];
@@ -153,7 +153,7 @@ function FoodForm({
       {!food && (
         <label className="flex items-center gap-3 text-sm">
           <input
-            className="size-4 accent-cyan-400"
+            className="size-4 accent-blue-400"
             type="checkbox"
             checked={savePreset}
             onChange={(event) => setSavePreset(event.target.checked)}
@@ -292,7 +292,7 @@ export default function Fuel({
                 r="64"
                 fill="none"
                 stroke="currentColor"
-                className="text-cyan-950"
+                className="text-blue-950"
                 strokeWidth="3"
               />
               <circle
@@ -301,7 +301,7 @@ export default function Fuel({
                 r="64"
                 fill="none"
                 stroke="currentColor"
-                className="text-cyan-300 transition-all duration-700 motion-reduce:transition-none"
+                className="text-blue-300 transition-all duration-700 motion-reduce:transition-none"
                 strokeWidth="4"
                 strokeLinecap="round"
                 strokeDasharray={2 * Math.PI * 64}
@@ -313,13 +313,13 @@ export default function Fuel({
             <div className="text-center">
               <Flame
                 size={16}
-                className="mx-auto mb-1 text-cyan-300"
+                className="mx-auto mb-1 text-blue-300"
                 aria-hidden="true"
               />
               <strong className="block text-3xl font-semibold tabular-nums">
                 {Math.round(total.calories).toLocaleString()}
               </strong>
-              <span className="muted text-[10px] tracking-widest">
+              <span className="muted text-xs tracking-widest">
                 OF {state.targets.calories.toLocaleString()} KCAL
               </span>
             </div>
@@ -368,7 +368,7 @@ export default function Fuel({
                     />
                   </div>
                   {!compact && (
-                    <div className="muted mt-1 flex justify-between text-[10px] tabular-nums">
+                    <div className="muted mt-1 flex justify-between text-xs tabular-nums">
                       <span>{percent}%</span>
                       <span>
                         {round(Math.abs(target - consumed))} g{" "}
@@ -387,7 +387,7 @@ export default function Fuel({
               ? "Above daily estimate"
               : "Daily budget remaining"}
           </span>
-          <span className="tabular-nums text-cyan-200">
+          <span className="tabular-nums text-blue-200">
             {Math.abs(remainingCalories).toLocaleString()} kcal{" "}
             <span className="muted">· {caloriePercent}%</span>
           </span>
@@ -401,7 +401,7 @@ export default function Fuel({
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Droplets size={20} className="text-cyan-300" aria-hidden="true" />
+            <Droplets size={20} className="text-blue-300" aria-hidden="true" />
             <div>
               <h3 className="text-sm font-medium">Hydration</h3>
               <p className="muted mt-1 text-xs tabular-nums">
@@ -443,7 +443,7 @@ export default function Fuel({
         >
           {Array.from({ length: 20 }, (_, index) => (
             <span
-              className={`h-1.5 flex-1 ${state.water / Math.max(1, state.targets.water) > index / 20 ? "bg-cyan-400/80" : "bg-white/5"}`}
+              className={`h-1.5 flex-1 ${state.water / Math.max(1, state.targets.water) > index / 20 ? "bg-blue-400/80" : "bg-white/5"}`}
               key={index}
             />
           ))}
@@ -457,10 +457,10 @@ export default function Fuel({
       >
         <div className="mb-4 flex items-center justify-between gap-2">
           <h3 className="flex items-center gap-2 text-sm font-medium">
-            <Apple size={16} className="text-cyan-300" aria-hidden="true" />
+            <Apple size={16} className="text-blue-300" aria-hidden="true" />
             Quick log
           </h3>
-          <span className="muted text-[10px]">ONE TAP · ONE SERVING</span>
+          <span className="muted text-xs">ONE TAP · ONE SERVING</span>
         </div>
         <div
           className={`grid gap-2 ${compact ? "grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"}`}
@@ -470,20 +470,20 @@ export default function Fuel({
               type="button"
               key={`${food.name}-${index}`}
               onClick={() => logFood(food)}
-              className="group flex min-h-18 items-center justify-between gap-2 border border-white/8 bg-white/[0.015] p-3 text-left transition-colors hover:border-cyan-400/40 hover:bg-cyan-400/5"
+              className="group flex min-h-18 items-center justify-between gap-2 border border-white/8 bg-white/[0.015] p-3 text-left transition-colors hover:border-blue-400/40 hover:bg-blue-400/5"
               aria-label={`Log ${food.name}, ${food.calories} calories`}
             >
               <span className="min-w-0">
                 <span className="block text-xs leading-5 text-slate-200">
                   {food.name}
                 </span>
-                <span className="muted mt-1 block text-[10px]">
+                <span className="muted mt-1 block text-xs">
                   {food.calories} kcal · {food.protein} g protein
                 </span>
               </span>
               <Plus
                 size={15}
-                className="shrink-0 text-cyan-400/60 group-hover:text-cyan-300"
+                className="shrink-0 text-blue-400/60 group-hover:text-blue-300"
                 aria-hidden="true"
               />
             </button>
@@ -498,7 +498,7 @@ export default function Fuel({
         <p
           role="status"
           aria-live="polite"
-          className={`mt-3 flex min-h-4 items-center gap-2 text-xs ${announcement ? "text-cyan-200" : "muted"}`}
+          className={`mt-3 flex min-h-4 items-center gap-2 text-xs ${announcement ? "text-blue-200" : "muted"}`}
         >
           {announcement && <Check size={13} aria-hidden="true" />}
           {announcement}
@@ -511,7 +511,7 @@ export default function Fuel({
             <h3 className="flex items-center gap-2 text-lg font-semibold">
               <UtensilsCrossed
                 size={17}
-                className="text-cyan-300"
+                className="text-blue-300"
                 aria-hidden="true"
               />
               {allMeals ? "Meal history" : "Today’s food log"}
@@ -527,7 +527,7 @@ export default function Fuel({
             <div className="p-8 text-center">
               <UtensilsCrossed
                 size={24}
-                className="mx-auto mb-3 text-cyan-700"
+                className="mx-auto mb-3 text-blue-700"
                 aria-hidden="true"
               />
               <p className="text-sm">Your first meal starts here.</p>
@@ -545,7 +545,7 @@ export default function Fuel({
                   <div className="min-w-0">
                     <h4 className="break-words text-sm">{meal.name}</h4>
                     {allMeals && (
-                      <time className="text-[10px] muted" dateTime={meal.date}>
+                      <time className="text-xs muted" dateTime={meal.date}>
                         {meal.date}
                       </time>
                     )}

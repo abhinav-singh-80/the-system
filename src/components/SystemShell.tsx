@@ -217,7 +217,7 @@ export default function SystemShell({
             <br />
             over perfection.
           </p>
-          <span className="text-[10px] text-slate-500 leading-relaxed">
+          <span className="text-xs text-slate-500 leading-relaxed">
             Small actions.
             <br />
             Extraordinary evolution.
@@ -233,7 +233,7 @@ export default function SystemShell({
               <strong className="font-display text-lg">
                 {accounts[username].name}
               </strong>
-              <div className="text-[9px] muted">
+              <div className="text-[11px] muted">
                 LEVEL {levelFor(state.totalXp)} ·{" "}
                 {rankFor(levelFor(state.totalXp))}-RANK
               </div>
@@ -250,7 +250,7 @@ export default function SystemShell({
         </div>
       </aside>
       <div className="app-body">
-        <header className="topbar">
+        <header className="topbar sticky top-0 z-40 w-full bg-[#040711]/85 backdrop-blur-md border-b border-blue-500/15">
           <div className="flex items-center gap-4">
             <button
               className="icon-btn mobile-menu"
@@ -414,7 +414,7 @@ export default function SystemShell({
               THE SYSTEM <span className="text-primary">/</span> YOU ARE YOUR
               ONLY LIMIT.
             </span>
-            <span className="text-[9px] text-slate-600 flex items-center gap-2">
+            <span className="text-[11px] text-slate-600 flex items-center gap-2">
               <span className="w-1 h-1 rounded-full bg-emerald-400" />
               Saved on this device <ArrowUpRight size={11} />
             </span>
@@ -424,7 +424,10 @@ export default function SystemShell({
       {toast && (
         <div role="status" className="toast">
           <Crosshair size={20} />
-          {toast}
+          <div>
+            <span className="system-badge">[ SYSTEM NOTIFICATION ]</span>
+            <p className="mb-0 mt-2">{toast}</p>
+          </div>
         </div>
       )}
       {notice && (
@@ -439,7 +442,7 @@ export default function SystemShell({
               </div>
             )}
             {state.evolution.map((n, i) => (
-              <p className="border border-cyan-400/20 p-4 text-sm" key={i}>
+              <p className="border border-blue-400/20 p-4 text-sm" key={i}>
                 {n}
               </p>
             ))}

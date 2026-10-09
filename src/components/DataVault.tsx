@@ -177,7 +177,7 @@ export default function DataVault({ state, update }: ModuleProps) {
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="panel p-5">
           <p className="eyebrow">Completed days</p>
-          <p className="mb-1 mt-3 font-display text-4xl font-semibold text-cyan-200 tabular-nums">
+          <p className="mb-1 mt-3 font-display text-4xl font-semibold text-blue-200 tabular-nums">
             {completedDays.toString().padStart(2, "0")}
           </p>
           <p className="muted mb-0 text-xs">All mandatory quests complete</p>
@@ -193,7 +193,7 @@ export default function DataVault({ state, update }: ModuleProps) {
           <p className="eyebrow">Total experience</p>
           <p className="mb-1 mt-3 font-display text-4xl font-semibold tabular-nums">
             {state.totalXp.toLocaleString()}{" "}
-            <span className="text-lg text-cyan-400">XP</span>
+            <span className="text-lg text-blue-400">XP</span>
           </p>
           <p className="muted mb-0 text-xs">
             Current hunter · {state.username}
@@ -206,12 +206,12 @@ export default function DataVault({ state, update }: ModuleProps) {
           <h3 className="section-title flex items-center gap-2">
             <CalendarDays
               size={18}
-              className="text-cyan-300"
+              className="text-blue-300"
               aria-hidden="true"
             />
             Consistency record
           </h3>
-          <span className="muted text-[10px]">PAST 28 DAYS</span>
+          <span className="muted text-xs">PAST 28 DAYS</span>
         </header>
         <div className="grid grid-cols-7 gap-2 sm:grid-cols-14">
           {recentDays.map((day) => {
@@ -229,20 +229,20 @@ export default function DataVault({ state, update }: ModuleProps) {
                 key={day}
                 title={label}
                 aria-label={label}
-                className={`flex aspect-square min-h-8 items-center justify-center border text-[10px] tabular-nums ${day === state.day ? "outline outline-offset-2 outline-cyan-500/50" : ""} ${log?.allComplete ? "border-cyan-400/60 bg-cyan-400/20 text-cyan-100" : log && log.completed > 0 ? "border-amber-300/30 bg-amber-300/10 text-amber-100" : log ? "border-slate-600/60 bg-slate-500/10 text-slate-400" : "border-white/5 text-slate-600"}`}
+                className={`flex aspect-square min-h-8 items-center justify-center border text-xs tabular-nums ${day === state.day ? "outline outline-offset-2 outline-blue-500/50" : ""} ${log?.allComplete ? "border-blue-400/60 bg-blue-400/20 text-blue-100" : log && log.completed > 0 ? "border-amber-300/30 bg-amber-300/10 text-amber-100" : log ? "border-slate-600/60 bg-slate-500/10 text-slate-400" : "border-white/5 text-slate-600"}`}
               >
                 {Number(day.slice(-2))}
               </div>
             );
           })}
         </div>
-        <div className="muted mt-4 flex flex-wrap justify-between gap-3 text-[10px]">
+        <div className="muted mt-4 flex flex-wrap justify-between gap-3 text-xs">
           <span>
             {displayDate(recentDays[0])} — {displayDate(state.day)}
           </span>
           <div className="flex flex-wrap gap-4">
             <span className="flex items-center gap-1.5">
-              <span className="size-2 bg-cyan-400/60" />
+              <span className="size-2 bg-blue-400/60" />
               Complete
             </span>
             <span className="flex items-center gap-1.5">
@@ -273,7 +273,7 @@ export default function DataVault({ state, update }: ModuleProps) {
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className={`flex size-8 items-center justify-center border ${log.allComplete ? "border-cyan-400/20 bg-cyan-400/5 text-cyan-300" : "border-white/10 text-slate-500"}`}
+                    className={`flex size-8 items-center justify-center border ${log.allComplete ? "border-blue-400/20 bg-blue-400/5 text-blue-300" : "border-white/10 text-slate-500"}`}
                   >
                     {log.allComplete ? (
                       <CheckCheck size={15} aria-hidden="true" />
@@ -285,7 +285,7 @@ export default function DataVault({ state, update }: ModuleProps) {
                     <time dateTime={log.date} className="text-xs">
                       {log.date === state.day ? "Today" : displayDate(log.date)}
                     </time>
-                    <p className="muted mb-0 mt-1 text-[10px]">
+                    <p className="muted mb-0 mt-1 text-xs">
                       {log.completed} / {log.total} quests
                       {log.date === state.day
                         ? " · In progress"
@@ -295,7 +295,7 @@ export default function DataVault({ state, update }: ModuleProps) {
                     </p>
                   </div>
                 </div>
-                <span className="text-xs text-cyan-200 tabular-nums">
+                <span className="text-xs text-blue-200 tabular-nums">
                   +{log.xp} XP
                 </span>
               </li>
@@ -322,7 +322,7 @@ export default function DataVault({ state, update }: ModuleProps) {
         <div className="space-y-5">
           <section className="panel p-5 sm:p-6" aria-label="Export backup">
             <div className="mb-4 flex items-center gap-3">
-              <span className="flex size-10 items-center justify-center border border-cyan-400/20 bg-cyan-400/5 text-cyan-300">
+              <span className="flex size-10 items-center justify-center border border-blue-400/20 bg-blue-400/5 text-blue-300">
                 <Download size={19} aria-hidden="true" />
               </span>
               <div>
@@ -358,25 +358,25 @@ export default function DataVault({ state, update }: ModuleProps) {
                   setDragging(false);
               }}
               onDrop={dropFile}
-              className={`mt-4 border border-dashed p-6 text-center transition-colors ${dragging ? "border-cyan-300 bg-cyan-400/10" : "border-slate-600/70 bg-black/10"}`}
+              className={`mt-4 border border-dashed p-6 text-center transition-colors ${dragging ? "border-blue-300 bg-blue-400/10" : "border-slate-600/70 bg-black/10"}`}
             >
               {reading ? (
                 <LoaderCircle
                   size={25}
-                  className="mx-auto mb-3 animate-spin text-cyan-300 motion-reduce:animate-none"
+                  className="mx-auto mb-3 animate-spin text-blue-300 motion-reduce:animate-none"
                   aria-hidden="true"
                 />
               ) : (
                 <Upload
                   size={25}
-                  className="mx-auto mb-3 text-cyan-400/70"
+                  className="mx-auto mb-3 text-blue-400/70"
                   aria-hidden="true"
                 />
               )}
               <p className="mb-2 text-xs">
                 {reading ? "Validating backup…" : "Drop your JSON backup here"}
               </p>
-              <p className="muted mb-4 text-[10px]">One file · up to 8 MB</p>
+              <p className="muted mb-4 text-xs">One file · up to 8 MB</p>
               <button
                 className="btn btn-ghost"
                 disabled={reading}
@@ -394,7 +394,7 @@ export default function DataVault({ state, update }: ModuleProps) {
                 aria-label="Select JSON backup"
               />
             </div>
-            <p className="muted mb-0 mt-4 text-[10px] leading-relaxed">
+            <p className="muted mb-0 mt-4 text-xs leading-relaxed">
               Only backups belonging to {state.username} can be restored here.
               Other hunter accounts stay unchanged.
             </p>
@@ -413,7 +413,7 @@ export default function DataVault({ state, update }: ModuleProps) {
       )}
       {notice && (
         <div
-          className="flex items-start gap-3 border border-cyan-400/20 bg-cyan-400/5 p-4 text-xs text-cyan-100"
+          className="flex items-start gap-3 border border-blue-400/20 bg-blue-400/5 p-4 text-xs text-blue-100"
           role="status"
         >
           <Check size={17} className="shrink-0" aria-hidden="true" />
@@ -423,7 +423,7 @@ export default function DataVault({ state, update }: ModuleProps) {
 
       <div className="flex flex-wrap items-start gap-5 border-t border-white/8 pt-5 text-xs">
         <div className="flex items-center gap-2 text-slate-300">
-          <HardDrive size={16} className="text-cyan-400" aria-hidden="true" />
+          <HardDrive size={16} className="text-blue-400" aria-hidden="true" />
           Saved on this browser
         </div>
         <div className="flex items-center gap-2 text-slate-300">
@@ -444,7 +444,7 @@ export default function DataVault({ state, update }: ModuleProps) {
       {preview && (
         <Modal title="Review backup" onClose={() => setPreview(null)}>
           <div className="mb-5 flex items-center gap-3">
-            <FileJson size={24} className="text-cyan-300" aria-hidden="true" />
+            <FileJson size={24} className="text-blue-300" aria-hidden="true" />
             <div className="min-w-0">
               <p className="mb-1 break-all text-sm">{preview.filename}</p>
               <p className="muted mb-0 text-[11px]">
@@ -456,29 +456,29 @@ export default function DataVault({ state, update }: ModuleProps) {
           </div>
           <dl className="grid grid-cols-2 gap-4 border border-white/10 bg-black/20 p-4 text-sm">
             <div>
-              <dt className="muted text-[10px]">Hunter</dt>
+              <dt className="muted text-xs">Hunter</dt>
               <dd className="ml-0 mt-1">{preview.state.username}</dd>
             </div>
             <div>
-              <dt className="muted text-[10px]">Experience</dt>
+              <dt className="muted text-xs">Experience</dt>
               <dd className="ml-0 mt-1">
                 {preview.state.totalXp.toLocaleString()} XP
               </dd>
             </div>
             <div>
-              <dt className="muted text-[10px]">Quests / meals</dt>
+              <dt className="muted text-xs">Quests / meals</dt>
               <dd className="ml-0 mt-1">
                 {preview.state.quests.length} / {preview.state.meals.length}
               </dd>
             </div>
             <div>
-              <dt className="muted text-[10px]">History</dt>
+              <dt className="muted text-xs">History</dt>
               <dd className="ml-0 mt-1">{preview.state.history.length} days</dd>
             </div>
           </dl>
           <p className="mt-5 text-sm leading-relaxed">
             This will replace the current profile, quests, meals and progress
-            for <strong className="text-cyan-200">{state.username}</strong>.
+            for <strong className="text-blue-200">{state.username}</strong>.
             Export your current data first if you want to keep it.
           </p>
           <p className="muted text-xs leading-relaxed">

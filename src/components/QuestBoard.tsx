@@ -8,6 +8,7 @@ import {
   Flame,
   LockKeyhole,
   Pencil,
+  Play,
   Plus,
   ScanFace,
   Shield,
@@ -20,6 +21,7 @@ import { mandatoryComplete, previousDay, toggleQuest } from "../lib/engine";
 import ExerciseModal from "./ExerciseModal";
 import Modal from "./Modal";
 import "./quests.css";
+import "./exercise-demo.css";
 
 type Props = ModuleProps & {
   category?: "training" | "recovery";
@@ -189,7 +191,7 @@ function QuestEditor({
             type="checkbox"
             checked={mandatory}
             onChange={(event) => setMandatory(event.target.checked)}
-            className="mt-1 accent-cyan-400"
+            className="mt-1 accent-blue-400"
           />
           <span>
             Required daily quest
@@ -323,7 +325,7 @@ export default function QuestBoard({
         </div>
       </div>
       {state.restDay && !recovery && (
-        <p className="border border-cyan-500/20 bg-cyan-500/5 p-4 mb-4 text-xs leading-relaxed text-cyan-100">
+        <p className="border border-blue-500/20 bg-blue-500/5 p-4 mb-4 text-xs leading-relaxed text-blue-100">
           Recovery day planned. Training is optional today; your streak is
           preserved at midnight without earning a new day. Your full plan
           returns tomorrow.
@@ -341,10 +343,10 @@ export default function QuestBoard({
         </div>
       )}
       {state.evolution.length > 0 && !recovery && (
-        <div className="mb-4 flex gap-3 border border-cyan-500/20 bg-cyan-950/20 p-3">
-          <TrendingUp size={17} className="mt-1 shrink-0 text-cyan-300" />
+        <div className="mb-4 flex gap-3 border border-blue-500/20 bg-blue-950/20 p-3">
+          <TrendingUp size={17} className="mt-1 shrink-0 text-blue-300" />
           <div>
-            <p className="mb-1 text-xs font-semibold text-cyan-300">
+            <p className="mb-1 text-xs font-semibold text-blue-300">
               QUEST EVOLVED
             </p>
             {state.evolution.map((item, index) => (
@@ -417,16 +419,24 @@ export default function QuestBoard({
                   )}
                 </div>
                 {!compact && quest.completionStreak > 0 && (
-                  <p className="mt-2 flex items-center gap-1 text-[10px] text-amber-400">
+                  <p className="mt-2 flex items-center gap-1 text-xs text-amber-400">
                     <Flame size={11} />
                     {quest.completionStreak} consecutive{" "}
                     {quest.completionStreak === 1 ? "day" : "days"}
                   </p>
                 )}
               </button>
+              <button
+                className="guide-button"
+                aria-label={`Guide for ${quest.name}`}
+                onClick={() => setSelected(quest)}
+              >
+                <Play size={12} />
+                Guide
+              </button>
               <span className="quest-xp">
                 {quest.completed ? (
-                  <CircleCheck size={17} className="text-emerald-300" />
+                  <CircleCheck size={17} className="text-blue-300" />
                 ) : (
                   `+${quest.xp} XP`
                 )}
@@ -457,7 +467,7 @@ export default function QuestBoard({
       </div>
       {compact && quests.length > 3 && (
         <button
-          className="mt-4 flex w-full items-center justify-between border-t border-white/10 pt-4 text-xs text-slate-400 hover:text-cyan-300"
+          className="mt-4 flex w-full items-center justify-between border-t border-white/10 pt-4 text-xs text-slate-400 hover:text-blue-300"
           onClick={() => setExpanded(!expanded)}
         >
           {expanded ? "Show fewer quests" : `View all ${quests.length} quests`}
@@ -467,7 +477,7 @@ export default function QuestBoard({
       {!compact && !recovery && (
         <div className="mt-6 border-t border-white/10 pt-5">
           <div className="mb-3 flex items-center gap-2">
-            <Sparkles size={15} className="text-cyan-300" />
+            <Sparkles size={15} className="text-blue-300" />
             <h3 className="eyebrow text-xs">Tomorrow’s intel</h3>
             {!allDone && <LockKeyhole size={12} className="text-slate-500" />}
           </div>
@@ -500,7 +510,7 @@ export default function QuestBoard({
                         {quest.name}
                       </span>
                       <span
-                        className={`whitespace-nowrap font-mono text-[10px] ${evolves ? "text-cyan-300" : "text-slate-500"}`}
+                        className={`whitespace-nowrap font-mono text-xs ${evolves ? "text-blue-300" : "text-slate-500"}`}
                       >
                         {quest.sets} × {reps} {quest.unit}
                         {evolves ? " · evolved" : ""}

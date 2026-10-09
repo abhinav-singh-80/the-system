@@ -1,28 +1,9 @@
-import { useState } from "react";
-import {
-  ArrowUpRight,
-  Crosshair,
-  Check,
-  Flame,
-  Target,
-  Activity,
-  ChevronRight,
-  RotateCw,
-  Sparkles,
-} from "lucide-react";
-import type { ModuleProps, Muscle, View } from "../lib/types";
-import Anatomy from "./Anatomy";
+import { ArrowUpRight, Check, Flame, Target, Sparkles } from "lucide-react";
+import type { ModuleProps, View } from "../lib/types";
 import HunterStatus from "./HunterStatus";
 import QuestBoard from "./QuestBoard";
 import Fuel from "./Fuel";
 import { mandatoryComplete } from "../lib/engine";
-const muscles: { id: Muscle; name: string }[] = [
-  { id: "chest", name: "Chest" },
-  { id: "back", name: "Back" },
-  { id: "shoulders", name: "Shoulders" },
-  { id: "core", name: "Core" },
-  { id: "legs", name: "Legs" },
-];
 export default function Overview({
   state,
   update,
@@ -32,10 +13,7 @@ export default function Overview({
   onComplete: (id: string) => void;
   onNavigate: (view: View) => void;
 } & ModuleProps) {
-  const [muscle, setMuscle] = useState<Muscle>("chest");
-  const [back, setBack] = useState(false);
   const complete = state.quests.filter((q) => q.completed).length;
-  const mandatory = state.quests.filter((q) => q.mandatory);
   const meals = state.meals.filter((m) => m.date === state.day);
   const calories = meals.reduce((s, m) => s + m.calories, 0);
   return (
@@ -56,7 +34,7 @@ export default function Overview({
             next level.
           </p>
           <button
-            className="btn btn-primary mt-6"
+            className="btn btn-primary mt-4"
             onClick={() => onNavigate("quests")}
           >
             {mandatoryComplete(state)
@@ -72,19 +50,19 @@ export default function Overview({
           <svg viewBox="0 0 280 230" className="mission-sigil">
             <defs>
               <linearGradient id="sigil" x1="0" y1="0" x2="1" y2="1">
-                <stop stopColor="#00e5ff" />
-                <stop offset="1" stopColor="#0070f3" />
+                <stop stopColor="#3b82f6" />
+                <stop offset="1" stopColor="#1e60ff" />
               </linearGradient>
             </defs>
             <path
               d="M140 20 220 68 208 146 140 208 72 146 60 68Z"
-              fill="#009dff08"
+              fill="#2563eb08"
               stroke="url(#sigil)"
             />
             <path
               d="m140 38 62 38-10 63-52 48-52-48-10-63Z"
               fill="none"
-              stroke="#00e5ff44"
+              stroke="#3b82f644"
             />
             <path
               d="m121 58 18 19 20-19-8 39 19 11-20 7-4 41 16 15-22 14-21-14 16-15-4-41-21-7 20-11Z"
@@ -92,7 +70,7 @@ export default function Overview({
             />
             <path
               d="m48 112-20 9 20 9m184-18 20 9-20 9M140 4v13m0 192v13"
-              stroke="#00e5ff88"
+              stroke="#3b82f688"
               fill="none"
             />
           </svg>
@@ -142,79 +120,12 @@ export default function Overview({
               </strong>
               <span className="eyebrow">{item.suffix}</span>
             </div>
-            <div className="text-[9px] text-slate-500 mt-1">{item.detail}</div>
+            <div className="text-[11px] text-slate-500 mt-1">{item.detail}</div>
           </div>
         ))}
       </div>
-      <div className="status-grid">
+      <div className="overview-status">
         <HunterStatus state={state} update={update} />
-        <section className="panel anatomy-panel">
-          <header className="flex justify-between items-start">
-            <div>
-              <span className="eyebrow">PHYSICAL DEVELOPMENT</span>
-              <h2 className="section-title mt-2">Build a balanced physique.</h2>
-            </div>
-            <Crosshair size={20} className="text-primary" strokeWidth={1} />
-          </header>
-          <div className="anatomy-stage">
-            <div className="anatomy-grid" />
-            <div className="anatomy-left">
-              <span className="eyebrow">TARGET GROUPS</span>
-              {muscles.map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => {
-                    setMuscle(m.id);
-                    setBack(m.id === "back");
-                  }}
-                  className={`muscle-selector ${muscle === m.id ? "selected" : ""}`}
-                >
-                  <span className="muscle-marker" />
-                  {m.name}
-                  <ChevronRight size={12} />
-                </button>
-              ))}
-            </div>
-            <div className="anatomy-model">
-              <Anatomy
-                muscles={[muscle]}
-                back={back}
-                className="hud-anatomy"
-                onSelect={setMuscle}
-                interactive
-              />
-              <div className="anatomy-floor" />
-            </div>
-            <div className="anatomy-readout">
-              <span className="eyebrow">FOCUS</span>
-              <strong>
-                {muscles.find((m) => m.id === muscle)?.name ?? "Posture"}
-              </strong>
-              <span className="text-[9px] muted">
-                {state.quests.filter((q) => q.muscle === muscle).length}{" "}
-                assigned routines
-              </span>
-              <div className="anatomy-line" />
-              <span className="text-orange-400 text-[8px] flex items-center gap-1">
-                <span className="w-1 h-1 bg-orange-500 rounded-full" /> ACTIVE
-                MUSCLE
-              </span>
-            </div>
-          </div>
-          <footer className="flex justify-between items-center text-[9px] border-t border-white/10 pt-3">
-            <span className="muted flex gap-2 items-center">
-              <Activity size={12} />
-              {mandatory.length} mandatory training quests
-            </span>
-            <button
-              className="text-primary flex items-center gap-2 min-h-9"
-              onClick={() => setBack(!back)}
-            >
-              <RotateCw size={12} />
-              {back ? "Front view" : "Back view"}
-            </button>
-          </footer>
-        </section>
       </div>
       <div className="flex items-center justify-between gap-3 pt-2">
         <div>
