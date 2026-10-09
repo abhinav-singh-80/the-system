@@ -1,0 +1,262 @@
+.anatomy {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: visible;
+}
+.anatomy-muscle {
+  stroke: #285269;
+  stroke-width: 0.85;
+  transition:
+    fill 0.25s,
+    filter 0.25s,
+    stroke 0.25s;
+}
+.anatomy-muscle.is-active {
+  stroke: #ff8f51;
+  filter: drop-shadow(0 0 4px #ff450050);
+  animation: muscle-glow 3s ease-in-out infinite;
+}
+.anatomy-muscle[role="button"] {
+  cursor: pointer;
+}
+.anatomy-muscle[role="button"]:hover,
+.anatomy-muscle[role="button"]:focus {
+  stroke: #00e5ff;
+  stroke-width: 2;
+  outline: none;
+}
+.quest-list {
+  display: grid;
+  gap: 10px;
+}
+.quest-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #182330;
+  background: #0b111ba8;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.quest-row:hover {
+  border-color: #275267;
+  background: #0d1925;
+}
+.quest-row.is-complete {
+  border-color: #24645366;
+  background: #10241f30;
+}
+.quest-row.is-complete .quest-name {
+  color: #94b2b6;
+}
+.quest-row.is-next::before {
+  content: "";
+  position: absolute;
+  inset: -1px auto -1px -1px;
+  width: 2px;
+  background: linear-gradient(transparent, #00e5ff, transparent);
+  box-shadow: 0 0 10px #00e5ff60;
+  animation: quest-border 3s ease-in-out infinite;
+}
+.quest-check {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #345063;
+  border-radius: 4px;
+  color: #4b6c7d;
+  background: #050d17;
+  transition: all 0.2s;
+}
+.quest-check:hover:not(:disabled) {
+  border-color: #00e5ff;
+  color: #00e5ff;
+}
+.quest-check[aria-pressed="true"] {
+  color: #70e3ba;
+  border-color: #3b947c;
+  background: #11352e;
+}
+.quest-check:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.quest-main {
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+.quest-name {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.quest-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 13px;
+  margin-top: 4px;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  color: #91a1b7;
+}
+.quest-xp {
+  color: #00d9f2;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.quest-icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border: 1px solid #1d384b;
+  border-radius: 3px;
+  color: #71a6bc;
+  background: #101d2b;
+}
+.quest-edit {
+  display: flex;
+  gap: 3px;
+}
+.quest-icon-button {
+  width: 31px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: #7c91a8;
+  border-radius: 3px;
+}
+.quest-icon-button:hover {
+  background: #1b2c3b;
+  color: #d7f7ff;
+}
+.quest-lock {
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ff778e;
+  border: 1px solid #6a2230;
+  background: repeating-linear-gradient(
+    45deg,
+    #230d13,
+    #230d13 10px,
+    #1d0b10 10px,
+    #1d0b10 20px
+  );
+}
+.quest-lock svg {
+  flex-shrink: 0;
+}
+.exercise-anatomy {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 340px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, #0f2232, #080d17 65%);
+  border: 1px solid #1d2e3f;
+}
+.exercise-anatomy .anatomy {
+  height: 345px;
+}
+.exercise-anatomy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    #00000015 3px,
+    #00000015 4px
+  );
+}
+.tempo-track {
+  position: relative;
+  height: 4px;
+  margin: 20px 3px 12px;
+  background: #213242;
+  border-radius: 4px;
+}
+.tempo-track::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #00e5ff;
+  box-shadow: 0 0 14px #00e5ff80;
+  animation: form-tempo 5s ease-in-out infinite;
+}
+@keyframes muscle-glow {
+  50% {
+    filter: drop-shadow(0 0 7px #ff450085);
+  }
+}
+@keyframes quest-border {
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes form-tempo {
+  0%,
+  100% {
+    left: 0;
+  }
+  60%,
+  75% {
+    left: calc(100% - 12px);
+  }
+}
+@media (max-width: 500px) {
+  .quest-row {
+    gap: 10px;
+    padding: 12px;
+  }
+  .quest-icon {
+    display: none;
+  }
+  .quest-edit {
+    flex-direction: column;
+  }
+  .quest-icon-button {
+    height: 27px;
+  }
+  .quest-xp {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .anatomy-muscle.is-active,
+  .quest-row.is-next::before,
+  .tempo-track::after {
+    animation: none;
+  }
+}
+@media (pointer: coarse) {
+  .quest-check {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+  }
+  .quest-icon-button {
+    width: 44px;
+    height: 44px;
+  }
+}
